@@ -309,7 +309,19 @@ async function createWindow(): Promise<void> {
   })
 
   // Enhanced screen capture resistance
-  state.mainWindow.setContentProtection(true)
+
+  if (process.platform === "win32") {
+    setInterval(() => {
+      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+        // Set the window to be transparent and on top
+        this.mainWindow.setContentProtection(true)
+      }
+    }, 100)
+  }
+  else{
+    state.mainWindow.setContentProtection(true)
+  }
+
   state.mainWindow.setHiddenInMissionControl(true)
   state.mainWindow.setVisibleOnAllWorkspaces(true, {
     visibleOnFullScreen: true
