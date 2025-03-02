@@ -108,6 +108,14 @@ npm install
 bun install
 ```
 
+## Configure Environment Variables
+
+- Before running the project, set up the required environment variables. You can do this by creating a .env file in the root directory of the project. Below is an example of the required environment variables:
+```bash
+VITE_SUPABASE_URL = "Your Supabase URL"
+VITE_SUPABASE_ANON_KEY = "Your Supabase API Key"
+```
+
 ## Running Locally
 
 1. Start the development server:
