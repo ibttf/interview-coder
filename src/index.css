@@ -11,7 +11,9 @@
   background: rgba(252, 252, 252, 0.98);
   color: rgba(60, 60, 60, 0.9);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
   position: relative;
+  z-index: 3;
   z-index: 2;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
