@@ -15,6 +15,7 @@ The application is invisible to:
 - All browser-based screen recording software
 - All versions of Discord
 - Mac OS _screenshot_ functionality (Command + Shift + 3/4)
+//hello this is my first commit
 
 Note: The application is **NOT** invisible to:
 
