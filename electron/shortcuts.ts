@@ -9,7 +9,7 @@ export class ShortcutsHelper {
   }
 
   public registerGlobalShortcuts(): void {
-    globalShortcut.register("CommandOrControl+H", async () => {
+    globalShortcut.register("CommandOrControl+Shift+H", async () => {
       const mainWindow = this.deps.getMainWindow()
       if (mainWindow) {
         console.log("Taking screenshot...")
@@ -26,13 +26,13 @@ export class ShortcutsHelper {
       }
     })
 
-    globalShortcut.register("CommandOrControl+Enter", async () => {
+    globalShortcut.register("CommandOrControl+Shift+Enter", async () => {
       await this.deps.processingHelper?.processScreenshots()
     })
 
-    globalShortcut.register("CommandOrControl+R", () => {
+    globalShortcut.register("CommandOrControl+Shift+R", () => {
       console.log(
-        "Command + R pressed. Canceling requests and resetting queues..."
+        "Command + Shift + R pressed. Canceling requests and resetting queues..."
       )
 
       // Cancel ongoing API requests
@@ -55,27 +55,27 @@ export class ShortcutsHelper {
     })
 
     // New shortcuts for moving the window
-    globalShortcut.register("CommandOrControl+Left", () => {
-      console.log("Command/Ctrl + Left pressed. Moving window left.")
+    globalShortcut.register("CommandOrControl+Shift+Left", () => {
+      console.log("Command/Ctrl + Shift + Left pressed. Moving window left.")
       this.deps.moveWindowLeft()
     })
 
-    globalShortcut.register("CommandOrControl+Right", () => {
-      console.log("Command/Ctrl + Right pressed. Moving window right.")
+    globalShortcut.register("CommandOrControl+Shift+Right", () => {
+      console.log("Command/Ctrl + Shift + Right pressed. Moving window right.")
       this.deps.moveWindowRight()
     })
 
-    globalShortcut.register("CommandOrControl+Down", () => {
-      console.log("Command/Ctrl + down pressed. Moving window down.")
+    globalShortcut.register("CommandOrControl+Shift+Down", () => {
+      console.log("Command/Ctrl + Shift + down pressed. Moving window down.")
       this.deps.moveWindowDown()
     })
 
-    globalShortcut.register("CommandOrControl+Up", () => {
-      console.log("Command/Ctrl + Up pressed. Moving window Up.")
+    globalShortcut.register("CommandOrControl+Shift+Up", () => {
+      console.log("Command/Ctrl + Shift + Up pressed. Moving window Up.")
       this.deps.moveWindowUp()
     })
 
-    globalShortcut.register("CommandOrControl+B", () => {
+    globalShortcut.register("CommandOrControl+Shift+B", () => {
       this.deps.toggleMainWindow()
     })
 

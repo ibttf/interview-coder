@@ -35,12 +35,12 @@ Note: The application is **NOT** invisible to:
 
 The application uses unidentifiable global keyboard shortcuts that won't be detected by browsers or other applications:
 
-- Toggle Window Visibility: [Control or Cmd + b]
-- Move Window: [Control or Cmd + arrows]
-- Take Screenshot: [Control or Cmd + H]
-- Process Screenshots: [Control or Cmd + Enter]
-- Reset View: [Control or Cmd + R]
-- Quit: [Control or Cmd + Q]
+- Toggle Window Visibility: [Control or Cmd + Shift + b]
+- Move Window: [Control or Cmd + Shift + arrows]
+- Take Screenshot: [Control or Cmd + Shift + H]
+- Process Screenshots: [Control or Cmd + Shift + Enter]
+- Reset View: [Control or Cmd + Shift + R]
+- Quit: [Control or Cmd + Shift + Q]
 
 ## Usage
 
@@ -51,7 +51,7 @@ The application uses unidentifiable global keyboard shortcuts that won't be dete
 
 2. **Capturing Problem**
 
-   - Use global shortcut [Control or Cmd + H] to take screenshots
+   - Use global shortcut [Control or Cmd + Shift + H] to take screenshots
    - Screenshots are automatically added to the queue of up to 5.
 
 3. **Processing**
@@ -74,7 +74,7 @@ The application uses unidentifiable global keyboard shortcuts that won't be dete
    - Move window freely using global shortcut
    - Toggle visibility as needed
    - Window remains invisible to specified applications
-   - Reset view using Command + R
+   - Reset view using Command + Shift + R
 
 ## Prerequisites
 

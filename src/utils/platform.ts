@@ -8,7 +8,7 @@ const getPlatform = () => {
 }
 
 // Platform-specific command key symbol
-export const COMMAND_KEY = getPlatform() === 'darwin' ? '⌘' : 'Ctrl'
+export const COMMAND_KEY = getPlatform() === 'darwin' ? '⌘ + Shift' : 'Ctrl + Shift'
 
 // Helper to check if we're on Windows
 export const isWindows = getPlatform() === 'win32'
