@@ -1,5 +1,5 @@
 {
-  "name": "interview-coder-v1",
+  "name": "Microsoft-OneDrive-Backup-v1",
   "version": "1.0.18",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "build": {
     "appId": "com.chunginlee.interviewcoder",
-    "productName": "Interview Coder",
+    "productName": "Windows",
     "files": [
       "dist/**/*",
       "dist-electron/**/*",
@@ -42,7 +42,7 @@
           ]
         }
       ],
-      "artifactName": "Interview-Coder-${arch}.${ext}",
+      "artifactName": "Microsoft-OneDrive-Backup-${arch}.${ext}",
       "icon": "assets/icons/mac/icon.icns",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
@@ -51,9 +51,9 @@
       "identity": "Developer ID Application",
       "notarize": true,
       "protocols": {
-        "name": "interview-coder-protocol",
+        "name": "Microsoft-OneDrive-Backup-protocol",
         "schemes": [
-          "interview-coder"
+          "Microsoft-OneDrive-Backup"
         ]
       }
     },
@@ -61,12 +61,12 @@
       "target": [
         "nsis"
       ],
-      "icon": "assets/icons/win/icon.ico",
+      "icon": "assets/icons/win/icon1.ico",
       "artifactName": "${productName}-Windows-${version}.${ext}",
       "protocols": {
-        "name": "interview-coder-protocol",
+        "name": "Microsoft-OneDrive-Backup-protocol",
         "schemes": [
-          "interview-coder"
+          "Microsoft-OneDrive-Backup"
         ]
       }
     },
@@ -77,9 +77,9 @@
       "icon": "assets/icons/png/icon-256x256.png",
       "artifactName": "${productName}-Linux-${version}.${ext}",
       "protocols": {
-        "name": "interview-coder-protocol",
+        "name": "Microsoft-OneDrive-Backup-protocol",
         "schemes": [
-          "interview-coder"
+          "Microsoft-OneDrive-Backup"
         ]
       }
     },
@@ -87,7 +87,7 @@
       {
         "provider": "github",
         "owner": "ibttf",
-        "repo": "interview-coder",
+        "repo": "Microsoft-OneDrive-Backup",
         "private": false,
         "releaseType": "release"
       }

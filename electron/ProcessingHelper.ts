@@ -269,18 +269,25 @@ export class ProcessingHelper {
             )
 
             // Generate solutions after successful extraction
+            console.log("Starting solution generation")
             const solutionsResult = await this.generateSolutionsHelper(signal)
             if (solutionsResult.success) {
+              console.log("Solution generation successful", solutionsResult.data)
+              
+              // Use the solution data directly without replacing newlines
+              const formattedData = solutionsResult.data;
+              
               // Clear any existing extra screenshots before transitioning to solutions view
               this.screenshotHelper.clearExtraScreenshotQueue()
               mainWindow.webContents.send(
-                this.deps.PROCESSING_EVENTS.SOLUTION_SUCCESS,
-                solutionsResult.data
+              this.deps.PROCESSING_EVENTS.SOLUTION_SUCCESS,
+              formattedData
               )
               return { success: true, data: solutionsResult.data }
             } else {
+              console.error("Solution generation failed", solutionsResult.error)
               throw new Error(
-                solutionsResult.error || "Failed to generate solutions"
+              solutionsResult.error || "Failed to generate solutions"
               )
             }
           }
@@ -369,6 +376,8 @@ export class ProcessingHelper {
           }
         }
       )
+
+      console.log("Response received:", response)
 
       return { success: true, data: response.data }
     } catch (error: any) {

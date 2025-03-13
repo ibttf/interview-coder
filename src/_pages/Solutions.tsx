@@ -283,38 +283,117 @@ const Solutions: React.FC<SolutionsProps> = ({
           console.warn("Received empty or invalid solution data")
           return
         }
-        console.log({ data })
-        const solutionData = {
-          code: data.code,
-          thoughts: data.thoughts,
-          time_complexity: data.time_complexity,
-          space_complexity: data.space_complexity
+        console.log("Raw solution data:", data)
+        
+        // Format each field of the data
+        let formattedCode = data.code;
+        let formattedThoughts = data.thoughts;
+        let formattedTimeComplexity = data.time_complexity;
+        let formattedSpaceComplexity = data.space_complexity;
+        
+        // Helper function to format JSON strings or extract content from markdown code blocks
+        interface ParsedField {
+          Code?: string
+          Explanation?: string
+          "Time Complexity"?: string
+          "Space Complexity"?: string
+          complexity_explanation?: string
+          [key: string]: any
         }
 
-        queryClient.setQueryData(["solution"], solutionData)
-        setSolutionData(solutionData.code || null)
-        setThoughtsData(solutionData.thoughts || null)
-        setTimeComplexityData(solutionData.time_complexity || null)
-        setSpaceComplexityData(solutionData.space_complexity || null)
+        const formatField = (field: unknown): string | null | unknown => {
+          if (!field) return null
 
+          // If it's a string that looks like JSON, try to parse it
+          if (
+            typeof field === "string" &&
+            (field.trim().startsWith("{") || field.trim().startsWith("["))
+          ) {
+            try {
+              const parsed = JSON.parse(field) as ParsedField
+
+              // Handle JSON object with code/explanation properties
+              if (parsed.Code) {
+                return parsed.Code.replace(/```python\n/g, "")
+                  .replace(/```\n?/g, "")
+                  .trim()
+              } else if (parsed.Explanation) {
+                return parsed.Explanation
+              } else if (parsed["Time Complexity"]) {
+                return parsed["Time Complexity"]
+              } else if (parsed["Space Complexity"]) {
+                return parsed["Space Complexity"]
+              } else if (parsed.complexity_explanation) {
+                return parsed.complexity_explanation
+              } else if (typeof parsed === "object") {
+                // For other objects, stringify but with formatting
+                return JSON.stringify(parsed, null, 2)
+              }
+
+              // If it's a primitive value, return as is
+              return parsed
+            } catch (e) {
+              console.log("Not a valid JSON string, using as is")
+            }
+          }
+
+          // If it's a string with markdown code blocks, clean them up
+          if (typeof field === "string" && field.includes("```")) {
+            return field.replace(/```python\n/g, "")
+              .replace(/```\n?/g, "")
+              .trim()
+          }
+
+          // Return the original field if no formatting was applied
+          return field
+        }
+        
+        // Apply formatting to each field
+        formattedCode = formatField(formattedCode);
+        formattedThoughts = formatField(formattedThoughts);
+        formattedTimeComplexity = formatField(formattedTimeComplexity);
+        formattedSpaceComplexity = formatField(formattedSpaceComplexity);
+        
+        console.log("Formatted solution data:", {
+          code: formattedCode,
+          thoughts: formattedThoughts,
+          time_complexity: formattedTimeComplexity,
+          space_complexity: formattedSpaceComplexity
+        });
+        
+        // Create the solution data object with formatted fields
+        const solutionData = {
+          code: formattedCode,
+          thoughts: formattedThoughts,
+          time_complexity: formattedTimeComplexity,
+          space_complexity: formattedSpaceComplexity
+        };
+        
+        // Update the query cache and state
+        queryClient.setQueryData(["solution"], solutionData);
+        setSolutionData(solutionData.code || null);
+        setThoughtsData(solutionData.thoughts || null);
+        setTimeComplexityData(solutionData.time_complexity || null);
+        setSpaceComplexityData(solutionData.space_complexity || null);
+        
         // Fetch latest screenshots when solution is successful
         const fetchScreenshots = async () => {
           try {
-            const existing = await window.electronAPI.getScreenshots()
+            const existing = await window.electronAPI.getScreenshots();
             const screenshots =
               existing.previews?.map((p) => ({
                 id: p.path,
                 path: p.path,
                 preview: p.preview,
                 timestamp: Date.now()
-              })) || []
-            setExtraScreenshots(screenshots)
+              })) || [];
+            setExtraScreenshots(screenshots);
           } catch (error) {
-            console.error("Error loading extra screenshots:", error)
-            setExtraScreenshots([])
+            console.error("Error loading extra screenshots:", error);
+            setExtraScreenshots([]);
           }
-        }
-        fetchScreenshots()
+        };
+        fetchScreenshots();
       }),
 
       //########################################################
