@@ -277,6 +277,10 @@ const Solutions: React.FC<SolutionsProps> = ({
         setSpaceComplexityData(solution?.space_complexity || null)
         console.error("Processing error:", error)
       }),
+      
+      
+      
+      
       //when the initial solution is generated, we'll set the solution data to that
       window.electronAPI.onSolutionSuccess((data) => {
         if (!data) {
@@ -284,13 +288,18 @@ const Solutions: React.FC<SolutionsProps> = ({
           return
         }
         console.log("Raw solution data:", data)
-        
-        // Format each field of the data
-        let formattedCode = data.code;
-        let formattedThoughts = data.thoughts;
-        let formattedTimeComplexity = data.time_complexity;
-        let formattedSpaceComplexity = data.space_complexity;
-        
+      
+        // 1. Parse the JSON string from data.code
+        let rawSolutionData;
+        try {
+          rawSolutionData = JSON.parse(data.code); // Parse the JSON string
+        } catch (e) {
+          console.error("Failed to parse JSON solution data:", e);
+          console.warn("Using raw data.code as is because JSON parsing failed.");
+          rawSolutionData = data.code; // If parsing fails, use the raw string (less ideal, but prevents crashing)
+        }
+      
+      
         // Helper function to format JSON strings or extract content from markdown code blocks
         interface ParsedField {
           Code?: string
@@ -300,10 +309,10 @@ const Solutions: React.FC<SolutionsProps> = ({
           complexity_explanation?: string
           [key: string]: any
         }
-
+      
         const formatField = (field: unknown): string | null | unknown => {
           if (!field) return null
-
+      
           // If it's a string that looks like JSON, try to parse it
           if (
             typeof field === "string" &&
@@ -311,7 +320,7 @@ const Solutions: React.FC<SolutionsProps> = ({
           ) {
             try {
               const parsed = JSON.parse(field) as ParsedField
-
+      
               // Handle JSON object with code/explanation properties
               if (parsed.Code) {
                 return parsed.Code.replace(/```python\n/g, "")
@@ -329,54 +338,73 @@ const Solutions: React.FC<SolutionsProps> = ({
                 // For other objects, stringify but with formatting
                 return JSON.stringify(parsed, null, 2)
               }
-
+      
               // If it's a primitive value, return as is
               return parsed
             } catch (e) {
               console.log("Not a valid JSON string, using as is")
             }
           }
-
+      
           // If it's a string with markdown code blocks, clean them up
           if (typeof field === "string" && field.includes("```")) {
             return field.replace(/```python\n/g, "")
               .replace(/```\n?/g, "")
               .trim()
           }
-
+      
           // Return the original field if no formatting was applied
           return field
         }
-        
-        // Apply formatting to each field
-        formattedCode = formatField(formattedCode);
-        formattedThoughts = formatField(formattedThoughts);
-        formattedTimeComplexity = formatField(formattedTimeComplexity);
-        formattedSpaceComplexity = formatField(formattedSpaceComplexity);
-        
+      
+      
+        // Initialize variables to hold formatted data, using rawSolutionData now
+        let formattedCode;
+        let formattedThoughts;
+        let formattedTimeComplexity;
+        let formattedSpaceComplexity;
+      
+      
+        if (typeof rawSolutionData === 'object' && rawSolutionData !== null) {
+          // 2. & 3. Extract and format fields from the parsed JSON object
+          formattedCode = formatField(rawSolutionData.Code);
+          formattedThoughts = formatField(rawSolutionData.Explanation);
+          formattedTimeComplexity = formatField(rawSolutionData["Time Complexity"]);
+          formattedSpaceComplexity = formatField(rawSolutionData["Space Complexity"]);
+        } else {
+          // If rawSolutionData is not an object (e.g., JSON parsing failed or wasn't JSON in the first place),
+          // format the original data.code directly (as a fallback)
+          formattedCode = formatField(data.code);
+          formattedThoughts = null; // Or formatField(null) if you want formatField to handle nulls explicitly
+          formattedTimeComplexity = null;
+          formattedSpaceComplexity = null;
+        }
+      
+      
         console.log("Formatted solution data:", {
           code: formattedCode,
           thoughts: formattedThoughts,
           time_complexity: formattedTimeComplexity,
           space_complexity: formattedSpaceComplexity
         });
-        
-        // Create the solution data object with formatted fields
+      
+        // 4. Create the solution data object with formatted fields
         const solutionData = {
           code: formattedCode,
           thoughts: formattedThoughts,
           time_complexity: formattedTimeComplexity,
           space_complexity: formattedSpaceComplexity
         };
-        
-        // Update the query cache and state
+      
+        // 5. Update the query cache and state (rest of your original code is fine)
         queryClient.setQueryData(["solution"], solutionData);
-        setSolutionData(solutionData.code || null);
-        setThoughtsData(solutionData.thoughts || null);
-        setTimeComplexityData(solutionData.time_complexity || null);
-        setSpaceComplexityData(solutionData.space_complexity || null);
-        
-        // Fetch latest screenshots when solution is successful
+        setSolutionData(typeof solutionData.code === "string" ? solutionData.code : null);
+        setThoughtsData(Array.isArray(solutionData.thoughts) ? solutionData.thoughts : null);
+        setTimeComplexityData(typeof solutionData.time_complexity === "string" ? solutionData.time_complexity : null);
+        setSpaceComplexityData(typeof solutionData.space_complexity === "string" ? solutionData.space_complexity : null);
+      
+      
+        // Fetch latest screenshots - keep this part as is
         const fetchScreenshots = async () => {
           try {
             const existing = await window.electronAPI.getScreenshots();
